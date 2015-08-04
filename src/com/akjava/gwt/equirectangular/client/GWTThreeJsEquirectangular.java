@@ -3,6 +3,7 @@ package com.akjava.gwt.equirectangular.client;
 import com.akjava.gwt.equirectangular.client.SixCubeRecorder.SixCubeFrame;
 import com.akjava.gwt.html5.client.download.HTML5Download;
 import com.akjava.gwt.jszip.client.JSZip;
+import com.akjava.gwt.lib.client.LogUtils;
 import com.akjava.gwt.three.client.gwt.GWTParamUtils;
 import com.akjava.gwt.three.client.java.utils.GWTThreeUtils;
 import com.akjava.gwt.three.client.js.THREE;
@@ -44,9 +45,12 @@ public class GWTThreeJsEquirectangular extends AbstractThreeApp implements Entry
 	Vector3 target;
 	private HorizontalPanel controlPanel;
 	private SixCubeRecorder recorder;
-	private int frameSize=10;
+	private int maxRecordFrameSize=10;
 	private PerspectiveCamera exportCamera;
 	private Group group;
+	
+	private boolean posting=false;
+	private int currentFrameIndex=0;
 	public void onModuleLoad() {
 		
 		 	root=new DockLayoutPanel(Unit.PX);
@@ -64,6 +68,7 @@ public class GWTThreeJsEquirectangular extends AbstractThreeApp implements Entry
 					
 					recorder.start();//wait timing
 					
+					/*
 					Timer timer=new Timer(){
 
 						@Override
@@ -74,14 +79,15 @@ public class GWTThreeJsEquirectangular extends AbstractThreeApp implements Entry
 							
 							
 							//downloadFile();
-							uploadFile();//possible slow & stop
+							//uploadNonaFile();//possible slow & stop
+							uploadSixCubeFileAtOnce();
 							
 							cancel();
 						}
 						
 					};
 					timer.scheduleRepeating(100);//after 1 sec
-					
+					*/
 					
 				}
 			});
@@ -97,27 +103,62 @@ public class GWTThreeJsEquirectangular extends AbstractThreeApp implements Entry
 		
 
 	}
-	private void uploadFile(){
-		for(int i=0;i<frameSize;i++){
+	
+	public interface PostListener{
+		public void onError(String message);
+		public void onReceived(String response);
+	}
+	
+	private void uploadSixCubeFile(){
+		SixCubeFrame frame=recorder.getFrames().get(0);
+		SixCubeFrameIO.postToSixCubeServlet(currentFrameIndex, frame,new PostListener(){
+
+			@Override
+			public void onError(String message) {
+				LogUtils.log("error:"+message);
+			}
+
+			@Override
+			public void onReceived(String response) {
+				LogUtils.log("received:"+response);
+				posting=false;
+			}});//simple post
+		currentFrameIndex++;
+		posting=true;
+		recorder.clear();
+		//SixCubeFrameIO.postTextData("I:\\Program Files\\Hugin\\bin\\nona.exe",512, frameSize);
+	}
+	
+	private void uploadSixCubeFileAtOnce(){
+		for(int i=0;i<maxRecordFrameSize;i++){
+			SixCubeFrame frame=recorder.getFrames().get(i);
+			SixCubeFrameIO.postToSixCubeServlet(i, frame,null);//simple post
+		}
+		
+		//SixCubeFrameIO.postTextData("I:\\Program Files\\Hugin\\bin\\nona.exe",512, frameSize);
+	}
+	
+	private void uploadNonaFile(){
+		for(int i=0;i<maxRecordFrameSize;i++){
 			SixCubeFrame frame=recorder.getFrames().get(i);
 			SixCubeFrameIO.postImageData(i+1, frame);//simple post
 		}
 		
-		SixCubeFrameIO.postTextData("I:\\Program Files\\Hugin\\bin\\nona.exe",512, frameSize);
+		SixCubeFrameIO.postTextData("I:\\Program Files\\Hugin\\bin\\nona.exe",512, maxRecordFrameSize);
 	}
 	private void downloadFile(){
 		JSZip zip=SixCubeFrameIO.toZip(recorder.getFrames());
 		
 		NonaBatchGenerator generator=new NonaBatchGenerator("I:\\Program Files\\Hugin\\bin\\nona.exe",512);
 		
-		for(int i=1;i<=frameSize;i++){
+		for(int i=1;i<=maxRecordFrameSize;i++){
 			String b1=generator.createPto(i);
 			zip.file(SixCubeFrameIO.toIndex(i)+".pto", b1);
 		}
 	
 		
 		
-		String batch=generator.createBatch(frameSize);
+		String batch=generator.createBatch(maxRecordFrameSize);
 		zip.file("create.bat", batch);
 		
 		Anchor anchor=HTML5Download.get().generateDownloadLink(zip.generateBlob(null), "application/zip", "test.zip", "download zip");
@@ -155,7 +196,7 @@ public class GWTThreeJsEquirectangular extends AbstractThreeApp implements Entry
 			
 			exportCamera = THREE.PerspectiveCamera( 90, 1, 1, 1100 );
 			
-			recorder = new SixCubeRecorder(512, exportCamera, frameSize);
+			recorder = new SixCubeRecorder(512, exportCamera, maxRecordFrameSize);
 			
 			group = THREE.Group();
 			
@@ -177,6 +218,9 @@ public class GWTThreeJsEquirectangular extends AbstractThreeApp implements Entry
 
 	
 	public void animate(double time){
+		if(posting){//still posting to servlet
+			return;
+		}
 		//group.getRotation().setX(-Math.PI/2);
 		
 		double z=group.getRotation().getZ();
@@ -185,7 +229,10 @@ public class GWTThreeJsEquirectangular extends AbstractThreeApp implements Entry
 		//LogUtils.log(time);
 		renderer.render(scene, camera);
 		
+		if(currentFrameIndex<maxRecordFrameSize && recorder.isRecording()){
 		recorder.update(renderer, scene);
-		
+		uploadSixCubeFile();
+		}
+		//
 	}
 }

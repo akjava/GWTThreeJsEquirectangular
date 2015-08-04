@@ -15,6 +15,16 @@
 <url-pattern>/write</url-pattern>
 </servlet-mapping>
   
+  
+  <servlet>
+<servlet-name>SixCubicToEquirectangularServlet</servlet-name>
+<servlet-class>com.akjava.gwt.equirectangular.server.SixCubicToEquirectangularServlet</servlet-class>
+</servlet>
+<servlet-mapping>
+<servlet-name>SixCubicToEquirectangularServlet</servlet-name>
+<url-pattern>/sixcube</url-pattern>
+</servlet-mapping>
+
   <!-- Default page to serve -->
   <welcome-file-list>
     <welcome-file>GWTThreeJsEquirectangular.html</welcome-file>

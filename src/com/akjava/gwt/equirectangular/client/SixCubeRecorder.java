@@ -38,7 +38,7 @@ public class SixCubeRecorder {
 		targetRight=THREE.WebGLRenderTarget(size,size, options);
 		targetLeft=THREE.WebGLRenderTarget(size,size, options);
 		
-		LogUtils.log(size);
+		//LogUtils.log(size);
 	}
 	public boolean hasFrames(){
 		return frames.size()>0;
@@ -48,6 +48,11 @@ public class SixCubeRecorder {
 	private int maxFrame;
 	
 	private boolean recording;
+	
+	public boolean isRecording(){
+		return recording;
+	}
+	
 	public void start(){
 		recording=true;
 	}
@@ -139,40 +144,45 @@ public class SixCubeRecorder {
 	public List<SixCubeFrame> getFrames() {
 		return frames;
 	}
+	
+	public void clear(){
+		frames.clear();
+	}
 
 	public static class SixCubeFrame{
-		private String up;
+		List<String> all=new ArrayList<String>();
 		public SixCubeFrame(String up, String down, String front, String back, String right, String left) {
 			super();
-			this.up = up;
-			this.down = down;
-			this.front = front;
-			this.back = back;
-			this.right = right;
-			this.left = left;
+			all.add(up);
+			all.add(down);
+			all.add(front);
+			all.add(back);
+			all.add(right);
+			all.add(left);
 		}
-		private String down;
+		
 		public String getUp() {
-			return up;
+			return all.get(0);
 		}
 		public String getDown() {
-			return down;
+			return all.get(1);
 		}
 		public String getFront() {
-			return front;
+			return all.get(2);
 		}
 		public String getBack() {
-			return back;
+			return all.get(3);
 		}
 		public String getRight() {
-			return right;
+			return all.get(4);
 		}
 		public String getLeft() {
-			return left;
+			return all.get(5);
 		}
-		private String front;
-		private String back;
-		private String right;
-		private String left;
+		public List<String> getAll(){
+			return all;
+		}
+		
+		
 	}
 }
