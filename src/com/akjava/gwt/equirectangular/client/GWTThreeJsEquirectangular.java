@@ -45,7 +45,7 @@ public class GWTThreeJsEquirectangular extends AbstractThreeApp implements Entry
 	Vector3 target;
 	private HorizontalPanel controlPanel;
 	private SixCubeRecorder recorder;
-	private int maxRecordFrameSize=10;
+	private int maxRecordFrameSize=1;
 	private PerspectiveCamera exportCamera;
 	private Group group;
 	
@@ -195,6 +195,7 @@ public class GWTThreeJsEquirectangular extends AbstractThreeApp implements Entry
 			focusPanel.getElement().appendChild(renderer.getDomElement());
 			
 			exportCamera = THREE.PerspectiveCamera( 90, 1, 1, 1100 );
+			
 			
 			recorder = new SixCubeRecorder(512, exportCamera, maxRecordFrameSize);
 			
