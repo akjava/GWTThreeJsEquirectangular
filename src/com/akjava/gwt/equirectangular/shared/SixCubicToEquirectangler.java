@@ -68,10 +68,12 @@ public class SixCubicToEquirectangler {
 				map=c.map;
 				genMapTime=watch.elapsed(TimeUnit.MILLISECONDS);
 				}
-				
+				Stopwatch watch0=Stopwatch.createStarted();
 				BufferedImage outputImage =
 		                new BufferedImage(erectW, erectH, BufferedImage.TYPE_INT_ARGB);
-				
+				//i guess create is slow
+				// initially 3000,average 10ms
+				//System.out.println("create bufferimage time:"+watch0.elapsed(TimeUnit.MILLISECONDS));
 				
 				for(int i=0;i<map.length;i++){
 					int x=i%erectW;
@@ -79,7 +81,7 @@ public class SixCubicToEquirectangler {
 					
 					CUBE_COORD cdata=map[i];
 					if(cdata==null){
-						LogUtils.log("null:"+x+","+y);
+						System.out.println("null:"+x+","+y);
 					}
 					int face=cdata.face.ordinal();
 					

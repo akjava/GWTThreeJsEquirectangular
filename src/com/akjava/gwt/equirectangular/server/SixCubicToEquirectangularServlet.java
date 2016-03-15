@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.akjava.gwt.equirectangular.shared.SixCubicToEquirectangler;
+import com.akjava.lib.common.utils.ValuesUtils;
 import com.google.common.base.Stopwatch;
 import com.google.common.io.BaseEncoding;
 
@@ -31,9 +32,43 @@ public class SixCubicToEquirectangularServlet extends HttpServlet {
 	  
 	}
 	
+	private boolean clearImages(){
+		File file=new File(getBaseDirectory());
+		if(!file.exists()){
+			System.out.println("not exist:"+getBaseDirectory());
+			return false;
+		}
+
+		String[] names=file.list();
+		for(String name:names){
+			if(name.toLowerCase().endsWith(".png")){
+				new File(file,name).delete();
+			}
+		}
+		
+		
+		return true;
+	}
+	
+	private String getBaseDirectory(){
+		String dir="s:\\download\\nonadatas\\";
+		return dir;
+	}
+	
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
+		throws ServletException, IOException {
+		
+		//image clear command
+		String command=req.getParameter("command");
+		if(command!=null && command.equals("clear")){
+			boolean result=clearImages();
+			resp.getWriter().println("clearImages:"+result);
+			return;
+		}
+		
+		
+		
 		Stopwatch totalWatch=Stopwatch.createStarted();
 		//just send filename & data & simply write it
 		String name=req.getParameter("name");
@@ -98,23 +133,46 @@ CUBE_DOWN,
 			}
 		}
 		
-		//check image-size all-same
+		//check image-size all-same,
+		int size=512;
+		String sizeString=req.getParameter("size");
+		if(sizeString!=null){
+			int tmpSize=ValuesUtils.toInt(sizeString, 0);
+			if(tmpSize!=0){
+				size=tmpSize;
+			}else{
+				System.out.println("invalid size-request");
+			}
+		}
 		
-		SixCubicToEquirectangler converter=new SixCubicToEquirectangler(2048);
+		SixCubicToEquirectangler converter=new SixCubicToEquirectangler(size*4);
+		
+		if(lastSize!=size){
+			SixCubicToEquirectangler.map=null;
+		}
+		
 		BufferedImage outputImage=converter.convertImage(images);
 		
+		lastSize=size;
 		
 		//don't care encode
-		String dir="s:\\download\\nonadatas\\";
-		File file=new File(dir+name);
+		
+		File file=new File(getBaseDirectory()+name);
 		
 		ImageIO.write(outputImage, "png", file);
 		
 		long total=totalWatch.elapsed(TimeUnit.MILLISECONDS);
-		
-		resp.getWriter().println("ok:total="+total+",genmap="+converter.genMapTime);
+		/**
+		 * 
+		 * 2048x1028 1000ms
+		 * 4096x2048 50000ms on 512MB servlet
+		 * 
+		 */
+		resp.getWriter().println("ok:create-time(ms)="+total+",genmap="+converter.genMapTime);
 		//TODO
 		//call nona,optional 
 	}
+	
+	private int lastSize;
 
 }

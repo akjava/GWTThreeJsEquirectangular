@@ -3,7 +3,6 @@ package com.akjava.gwt.equirectangular.client;
 
 import java.util.List;
 
-import com.akjava.gwt.equirectangular.client.GWTThreeJsEquirectangular.PostListener;
 import com.akjava.gwt.equirectangular.client.SixCubeRecorder.SixCubeFrame;
 import com.akjava.gwt.jszip.client.JSZip;
 import com.akjava.gwt.lib.client.LogUtils;
@@ -44,7 +43,7 @@ public class SixCubeFrameIO {
 	}
 	
 	
-	static String toIndex(int number){
+	public static String toIndex(int number){
 		return Strings.padStart(String.valueOf(number), 5, '0');
 	}
 	
@@ -68,8 +67,8 @@ public class SixCubeFrameIO {
 		simplePostToWrite("ffmpeg_image2movie.bat",new FFMpegBatchGenerator("s:\\download\\ffmpeg2.7.1\\bin\\ffmpeg.exe", 24, "output.mp4").createBatch());
 	}
 	
-	public static void postToSixCubeServlet(int index,SixCubeFrame frame,PostListener listener){
-		postToSixCube(toIndex(index)+".png",frame.getAll(),listener);
+	public static void postToSixCubeServlet(int size,int index,SixCubeFrame frame,PostListener listener){
+		postToSixCube(size,toIndex(index)+".png",frame.getAll(),listener);
 	}
 	//post to NonaCubi2ErectServlet
 	public static void simplePostToWrite(final String fileName,String data){
@@ -95,10 +94,35 @@ public class SixCubeFrameIO {
 		}catch(Exception e){}
 	}
 	
-	public static void postToSixCube(final String fileName,List<String> datas,final PostListener listener){
+	public static void callClearImages(final PostListener listener){
 		RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, "/sixcube");
 		builder.setHeader("Content-type", "application/x-www-form-urlencoded");
 		StringBuilder sb = new StringBuilder();
+		sb.append("command").append("=").append("clear");
+
+		try{
+			Request response  =builder.sendRequest(sb.toString(), new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					if(listener!=null)
+					listener.onReceived(response.getText());
+				}
+				
+				@Override
+				public void onError(Request request, Throwable exception) {
+					if(listener!=null)
+					listener.onError(exception.getMessage());
+				}
+			});
+		}catch(Exception e){}
+	}
+	
+	public static void postToSixCube(final int size,final String fileName,List<String> datas,final PostListener listener){
+		RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, "/sixcube");
+		builder.setHeader("Content-type", "application/x-www-form-urlencoded");
+		StringBuilder sb = new StringBuilder();
+		sb.append("size").append("=").append(size);
+		sb.append("&");
 		sb.append("name").append("=").append(URL.encodeQueryString(fileName));
 		
 		
