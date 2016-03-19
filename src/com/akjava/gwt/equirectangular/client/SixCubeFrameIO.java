@@ -3,7 +3,6 @@ package com.akjava.gwt.equirectangular.client;
 
 import java.util.List;
 
-import com.akjava.gwt.equirectangular.client.SixCubeRecorder.SixCubeFrame;
 import com.akjava.gwt.jszip.client.JSZip;
 import com.akjava.gwt.lib.client.LogUtils;
 import com.google.common.base.Strings;
@@ -18,12 +17,12 @@ public class SixCubeFrameIO {
 
 	public static final List<String> directions=ImmutableList.of("up","down","front","back","right","left");
 	
-	public static JSZip toZip(List<SixCubeFrame> frames){
+	public static JSZip toZip(List<SixCubicImageDataUrl> frames){
 		JSZip zip=JSZip.newJSZip();
 		
 		for(int i=0;i<frames.size();i++){
 			String index=toIndex(i+1);
-			SixCubeFrame frame=frames.get(i);
+			SixCubicImageDataUrl frame=frames.get(i);
 			
 			zip.base64UrlFile(index+"_up"+".png", frame.getUp());
 			zip.base64UrlFile(index+"_down"+".png", frame.getDown());
@@ -48,7 +47,7 @@ public class SixCubeFrameIO {
 	}
 	
 	
-	public static void postImageData(int index,SixCubeFrame frame){
+	public static void postImageData(int index,SixCubicImageDataUrl frame){
 		simplePostToWrite(toIndex(index)+"_up"+".png", frame.getUp());
 		simplePostToWrite(toIndex(index)+"_down"+".png", frame.getDown());
 		simplePostToWrite(toIndex(index)+"_front"+".png", frame.getFront());
@@ -67,7 +66,7 @@ public class SixCubeFrameIO {
 		simplePostToWrite("ffmpeg_image2movie.bat",new FFMpegBatchGenerator("s:\\download\\ffmpeg2.7.1\\bin\\ffmpeg.exe", 24, "output.mp4").createBatch());
 	}
 	
-	public static void postToSixCubeServlet(int size,int index,SixCubeFrame frame,PostListener listener){
+	public static void postToSixCubeServlet(int size,int index,SixCubicImageDataUrl frame,PostListener listener){
 		postToSixCube(size,toIndex(index)+".png",frame.getAll(),listener);
 	}
 	//post to NonaCubi2ErectServlet

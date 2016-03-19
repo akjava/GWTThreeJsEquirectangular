@@ -5,7 +5,7 @@ import com.akjava.gwt.equirectangular.client.NonaBatchGenerator;
 import com.akjava.gwt.equirectangular.client.PostListener;
 import com.akjava.gwt.equirectangular.client.SixCubeFrameIO;
 import com.akjava.gwt.equirectangular.client.SixCubeRecorder;
-import com.akjava.gwt.equirectangular.client.SixCubeRecorder.SixCubeFrame;
+import com.akjava.gwt.equirectangular.client.SixCubicImageDataUrl;
 import com.akjava.gwt.html5.client.download.HTML5Download;
 import com.akjava.gwt.jszip.client.JSZip;
 import com.akjava.gwt.lib.client.LogUtils;
@@ -110,7 +110,7 @@ public class GWTThreeJsEquirectangularTurnSkybox extends AbstractThreeApp implem
 
 	
 	private void uploadSixCubeFile(){
-		SixCubeFrame frame=recorder.getFrames().get(0);
+		SixCubicImageDataUrl frame=recorder.getFrames().get(0);
 		SixCubeFrameIO.postToSixCubeServlet(512,currentFrameIndex, frame,new PostListener(){
 
 			@Override
@@ -131,7 +131,7 @@ public class GWTThreeJsEquirectangularTurnSkybox extends AbstractThreeApp implem
 	
 	private void uploadSixCubeFileAtOnce(){
 		for(int i=0;i<maxRecordFrameSize;i++){
-			SixCubeFrame frame=recorder.getFrames().get(i);
+			SixCubicImageDataUrl frame=recorder.getFrames().get(i);
 			SixCubeFrameIO.postToSixCubeServlet(512,i, frame,null);//simple post
 		}
 		
@@ -140,7 +140,7 @@ public class GWTThreeJsEquirectangularTurnSkybox extends AbstractThreeApp implem
 	
 	private void uploadNonaFile(){
 		for(int i=0;i<maxRecordFrameSize;i++){
-			SixCubeFrame frame=recorder.getFrames().get(i);
+			SixCubicImageDataUrl frame=recorder.getFrames().get(i);
 			SixCubeFrameIO.postImageData(i+1, frame);//simple post
 		}
 		

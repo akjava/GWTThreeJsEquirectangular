@@ -3,19 +3,13 @@ package com.akjava.gwt.equirectangular.client;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.akjava.gwt.lib.client.CanvasUtils;
-import com.akjava.gwt.lib.client.LogUtils;
-import com.akjava.gwt.lib.client.experimental.ImageDataUtils;
 import com.akjava.gwt.three.client.js.THREE;
 import com.akjava.gwt.three.client.js.cameras.PerspectiveCamera;
 import com.akjava.gwt.three.client.js.math.Euler;
 import com.akjava.gwt.three.client.js.renderers.WebGLRenderTarget;
 import com.akjava.gwt.three.client.js.renderers.WebGLRenderer;
 import com.akjava.gwt.three.client.js.scenes.Scene;
-import com.google.gwt.canvas.client.Canvas;
-import com.google.gwt.canvas.dom.client.ImageData;
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.typedarrays.client.Uint8ArrayNative;
 
 //TODO make cubecamera version
 public class SixCubeRecorder {
@@ -121,7 +115,7 @@ public class SixCubeRecorder {
 		String right=targetRight.gwtTextureToCanvas(renderer).toDataUrl();
 		String left=targetLeft.gwtTextureToCanvas(renderer).toDataUrl();
 		
-		frames.add(new SixCubeFrame(up, down, front, back, right, left));
+		frames.add(new SixCubicImageDataUrl(up, down, front, back, right, left));
 		
 		camera.getRotation().copy(original);//reback
 	}
@@ -158,9 +152,9 @@ public class SixCubeRecorder {
 
 				    return canvas.toDataURL();
 	}-*/;
-	private List<SixCubeFrame> frames=new ArrayList<SixCubeRecorder.SixCubeFrame>();
+	private List<SixCubicImageDataUrl> frames=new ArrayList<SixCubicImageDataUrl>();
 	
-	public List<SixCubeFrame> getFrames() {
+	public List<SixCubicImageDataUrl> getFrames() {
 		return frames;
 	}
 	
@@ -168,40 +162,5 @@ public class SixCubeRecorder {
 		frames.clear();
 	}
 
-	public static class SixCubeFrame{
-		List<String> all=new ArrayList<String>();
-		public SixCubeFrame(String up, String down, String front, String back, String right, String left) {
-			super();
-			all.add(up);
-			all.add(down);
-			all.add(front);
-			all.add(back);
-			all.add(right);
-			all.add(left);
-		}
-		
-		public String getUp() {
-			return all.get(0);
-		}
-		public String getDown() {
-			return all.get(1);
-		}
-		public String getFront() {
-			return all.get(2);
-		}
-		public String getBack() {
-			return all.get(3);
-		}
-		public String getRight() {
-			return all.get(4);
-		}
-		public String getLeft() {
-			return all.get(5);
-		}
-		public List<String> getAll(){
-			return all;
-		}
-		
-		
-	}
+
 }

@@ -10,10 +10,8 @@ import java.util.concurrent.TimeUnit;
 import javax.imageio.ImageIO;
 
 import com.akjava.gwt.equirectangular.shared.Cube2Cyl.CUBE_COORD;
-import com.akjava.gwt.lib.client.LogUtils;
 import com.akjava.lib.common.graphics.BilinearCalculator;
 import com.akjava.lib.common.graphics.BilinearCalculator.AbstractSizeLimitBilinearValueGetter;
-import com.akjava.lib.common.graphics.BilinearCalculator.BilinearValueGetter;
 import com.google.common.base.Stopwatch;
 
 public class SixCubicToEquirectangler {

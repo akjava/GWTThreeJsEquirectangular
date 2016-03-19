@@ -2,9 +2,6 @@ package com.akjava.gwt.equirectangular.client;
 
 import java.io.IOException;
 
-import com.akjava.gwt.equirectangular.client.SixCubeRecorder.SixCubeFrame;
-import com.akjava.gwt.html5.client.download.HTML5Download;
-import com.akjava.gwt.jszip.client.JSZip;
 import com.akjava.gwt.lib.client.GWTHTMLUtils;
 import com.akjava.gwt.lib.client.JavaScriptUtils;
 import com.akjava.gwt.lib.client.LogUtils;
@@ -17,6 +14,7 @@ import com.akjava.gwt.three.client.gwt.JSParameter;
 import com.akjava.gwt.three.client.gwt.renderers.WebGLRendererParameter;
 import com.akjava.gwt.three.client.java.utils.GWTThreeUtils;
 import com.akjava.gwt.three.client.js.THREE;
+import com.akjava.gwt.three.client.js.cameras.CubeCamera;
 import com.akjava.gwt.three.client.js.cameras.PerspectiveCamera;
 import com.akjava.gwt.three.client.js.extras.ImageUtils;
 import com.akjava.gwt.three.client.js.extras.geometries.PlaneBufferGeometry;
@@ -31,15 +29,18 @@ import com.akjava.gwt.three.client.js.renderers.WebGLRenderer;
 import com.akjava.gwt.three.client.js.scenes.Scene;
 import com.akjava.gwt.three.client.js.textures.Texture;
 import com.google.common.collect.Lists;
+import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.text.shared.Renderer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ClosingEvent;
 import com.google.gwt.user.client.Window.ClosingHandler;
-import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -60,7 +61,8 @@ public class GWTThreeJsEquirectangular extends AbstractThreeApp implements Entry
 
 	Vector3 target;
 	private HorizontalPanel controlPanel;
-	private SixCubeRecorder recorder;
+	//private SixCubeRecorder recorder;
+	private SixCubicImageExtractor extactor;
 	//private int maxRecordFrameSize=30*60;
 	private PerspectiveCamera exportCamera;
 
@@ -75,13 +77,15 @@ public class GWTThreeJsEquirectangular extends AbstractThreeApp implements Entry
 	private double tweenTime;
 	
 	private double startTime;
+
+	private int maxRecordFrameSize;
 	public void onModuleLoad() {
 		
 		//should interface
 			Window.addWindowClosingHandler(new ClosingHandler() {
 				@Override
 				public void onWindowClosing(ClosingEvent event) {
-					if(recorder!=null && recorder.isRecording()){
+					if(isRecording()){
 						event.setMessage("Still Recording.stop and quit this app?");
 					}
 					
@@ -95,6 +99,16 @@ public class GWTThreeJsEquirectangular extends AbstractThreeApp implements Entry
 			
 			controlPanel = new HorizontalPanel();
 			root.addSouth(controlPanel, 40);
+			
+			
+			Button bt=new Button("test cube camera",new ClickHandler() {
+				
+				@Override
+				public void onClick(ClickEvent event) {
+					doTest();
+				}
+			});
+			//controlPanel.add(bt);
 			
 			final ValueListBox<Integer> sizeBox=new ValueListBox<Integer>(new Renderer<Integer>() {
 				@Override
@@ -157,8 +171,9 @@ public class GWTThreeJsEquirectangular extends AbstractThreeApp implements Entry
 							duration=durationBox.getValue();
 							
 							currentFrameIndex=0;//can try again?
-							recorder = new SixCubeRecorder(size, exportCamera, (int) (frameRate*duration));
-							recorder.start();//wait timing
+							extactor=new SixCubicImageExtractor(size, size, testCubeCamera);
+							maxRecordFrameSize=(int) (frameRate*duration);
+							
 							startTime=System.currentTimeMillis();
 							/*
 							Timer timer=new Timer(){
@@ -210,9 +225,17 @@ public class GWTThreeJsEquirectangular extends AbstractThreeApp implements Entry
 	
 
 	
+	protected void doTest() {
+		Canvas canvas=testCubeCamera.getRenderTarget().gwtTextureToCanvas(renderer);
+		Window.open(canvas.toDataUrl(), "test", null);
+	}
+
+
+
 	private void uploadSixCubeFile(){
-		int imageSize=recorder.getImageSize();
-		SixCubeFrame frame=recorder.getFrames().get(0);
+		int imageSize=extactor.getWidth();
+		SixCubicImageDataUrl frame=extactor.getImageDataUrls();
+		
 		SixCubeFrameIO.postToSixCubeServlet(imageSize,currentFrameIndex, frame,new PostListener(){
 
 			@Override
@@ -232,7 +255,7 @@ public class GWTThreeJsEquirectangular extends AbstractThreeApp implements Entry
 			}});//simple post
 		currentFrameIndex++;
 		posting=true;
-		recorder.clear();
+
 		//SixCubeFrameIO.postTextData("I:\\Program Files\\Hugin\\bin\\nona.exe",512, frameSize);
 		
 		
@@ -240,32 +263,35 @@ public class GWTThreeJsEquirectangular extends AbstractThreeApp implements Entry
 	
 	private void onRecordEnd() {
 		double time=System.currentTimeMillis()-startTime;
-		LogUtils.log("onEnd:"+time+",size="+recorder.getImageSize());
+		LogUtils.log("onEnd:"+time+",size="+extactor.getWidth());
 		executeButton.setEnabled(true);
 	}
 
 
-
+/*
 	private void uploadSixCubeFileAtOnce(){
-		int imageSize=recorder.getImageSize();
+		int imageSize=extactor.getWidth();
 		int maxRecordFrameSize=(int) (frameRate*duration);
 		for(int i=0;i<maxRecordFrameSize;i++){
-			SixCubeFrame frame=recorder.getFrames().get(i);
+			SixCubicImageDataUrl frame=recorder.getFrames().get(i);
 			SixCubeFrameIO.postToSixCubeServlet(imageSize,i, frame,null);//simple post
 		}
 		
 		//SixCubeFrameIO.postTextData("I:\\Program Files\\Hugin\\bin\\nona.exe",512, frameSize);
 	}
-	
+	*/
+	/*
 	private void uploadNonaFile(){
 		int maxRecordFrameSize=(int) (frameRate*duration);
 		for(int i=0;i<maxRecordFrameSize;i++){
-			SixCubeFrame frame=recorder.getFrames().get(i);
+			SixCubicImageDataUrl frame=recorder.getFrames().get(i);
 			SixCubeFrameIO.postImageData(i+1, frame);//simple post
 		}
 		
 		SixCubeFrameIO.postTextData("I:\\Program Files\\Hugin\\bin\\nona.exe",recorder.getImageSize(), maxRecordFrameSize);
 	}
+	*/
+	/*
 	private void downloadFile(){
 		JSZip zip=SixCubeFrameIO.toZip(recorder.getFrames());
 		
@@ -285,6 +311,7 @@ public class GWTThreeJsEquirectangular extends AbstractThreeApp implements Entry
 		controlPanel.add(anchor);
 		
 	}
+	*/
 	private double FAR=10000;
 	private boolean DAY;
 	private AmbientLight ambientLight;
@@ -333,6 +360,9 @@ public class GWTThreeJsEquirectangular extends AbstractThreeApp implements Entry
 			//exportCamera.getPosition().setY(-1);
 			group.add(exportCamera);
 			
+			testCubeCamera = THREE.CubeCamera(2, FAR, 512);
+			group.add(testCubeCamera);
+			
 			//ground
 			Texture textureSquares = ImageUtils.loadTexture("textures/patterns/bright_squares256.png");
 			
@@ -355,6 +385,8 @@ public class GWTThreeJsEquirectangular extends AbstractThreeApp implements Entry
 			ground.setReceiveShadow(true);
 
 			scene.add(ground);
+			
+			
 			
 			//light
 			double sunIntensity = 0.3;
@@ -417,6 +449,7 @@ public class GWTThreeJsEquirectangular extends AbstractThreeApp implements Entry
 	
 	private double fadeTime=1000*60;
 	private ExecuteButton executeButton;
+	private CubeCamera testCubeCamera;
 	
 	@Override
 	public void onWindowResize() {
@@ -427,6 +460,10 @@ public class GWTThreeJsEquirectangular extends AbstractThreeApp implements Entry
 	}
 
 
+	
+	private boolean isRecording(){
+		return extactor!=null && currentFrameIndex<maxRecordFrameSize;
+	}
 	
 	public void animate(double time){
 		if(posting){//still posting to servlet
@@ -451,12 +488,17 @@ public class GWTThreeJsEquirectangular extends AbstractThreeApp implements Entry
 		//group.getRotation().setX(-Math.PI/2);
 		
 		//LogUtils.log(time);
+		
+		//testcube
+		testCubeCamera.updateCubeMap(renderer, scene);
+		
 		renderer.render(scene, camera);
+		//testCubeCamera.up
 		
-		int maxRecordFrameSize=(int) (frameRate*duration);
 		
-		if(recorder!=null && currentFrameIndex<maxRecordFrameSize && recorder.isRecording()){
-			recorder.update(renderer, scene);
+		
+		if(isRecording()){
+			extactor.update(renderer, scene);
 			uploadSixCubeFile();
 			
 			double frameTime=fadeTime/maxRecordFrameSize;
