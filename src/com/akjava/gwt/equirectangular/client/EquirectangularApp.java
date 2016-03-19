@@ -27,7 +27,7 @@ public interface EquirectangularApp {
 	 * called when recording start.
 	 * usually for reset
 	 */
-	public  void onStartExtract(int maxFrame);
+	public  void startExtract(int maxFrame);
 	
 	
 	/*

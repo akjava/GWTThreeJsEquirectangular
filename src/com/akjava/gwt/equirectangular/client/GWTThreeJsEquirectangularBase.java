@@ -27,7 +27,7 @@ import com.google.gwt.user.client.ui.ValueListBox;
 public abstract class GWTThreeJsEquirectangularBase extends AbstractThreeApp implements EntryPoint {
 	
 	
-	private DockLayoutPanel root;
+	private DockLayoutPanel center;
 
 
 	private HorizontalPanel controlPanel;
@@ -59,7 +59,7 @@ public abstract class GWTThreeJsEquirectangularBase extends AbstractThreeApp imp
 				}
 			});
 		
-		 	root=new DockLayoutPanel(Unit.PX);
+			final DockLayoutPanel root=new DockLayoutPanel(Unit.PX);
 		 
 			RootLayoutPanel.get().add(root);
 			
@@ -131,7 +131,7 @@ public abstract class GWTThreeJsEquirectangularBase extends AbstractThreeApp imp
 							extactor=new SixCubicImageExtractor(size, size, getEquirectangularApp().getCubeCamera());
 							maxRecordFrameSize=(int) (frameRate*duration);
 							
-							getEquirectangularApp().onStartExtract(maxRecordFrameSize);
+							getEquirectangularApp().startExtract(maxRecordFrameSize);
 							
 							/*
 							Timer timer=new Timer(){
@@ -173,11 +173,16 @@ public abstract class GWTThreeJsEquirectangularBase extends AbstractThreeApp imp
 			noPost = new CheckBox("no save");
 			controlPanel.add(noPost);
 			
+			
+			
+			center=new DockLayoutPanel(Unit.PX);
+			root.add(center);
 			//start demo
 			Scheduler.get().scheduleDeferred(new ScheduledCommand() {	
 			@Override
 			public void execute() {
-				start(root);
+				
+				start(center);
 			}
 		});
 		
