@@ -15,7 +15,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.akjava.gwt.equirectangular.shared.SixCubicToEquirectangler;
 import com.akjava.lib.common.utils.ValuesUtils;
 import com.google.common.base.Stopwatch;
 import com.google.common.io.BaseEncoding;

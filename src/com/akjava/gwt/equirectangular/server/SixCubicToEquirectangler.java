@@ -1,4 +1,4 @@
-package com.akjava.gwt.equirectangular.shared;
+package com.akjava.gwt.equirectangular.server;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -9,6 +9,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.imageio.ImageIO;
 
+import com.akjava.gwt.equirectangular.shared.Cube2Cyl;
 import com.akjava.gwt.equirectangular.shared.Cube2Cyl.CUBE_COORD;
 import com.akjava.lib.common.graphics.BilinearCalculator;
 import com.akjava.lib.common.graphics.BilinearCalculator.AbstractSizeLimitBilinearValueGetter;

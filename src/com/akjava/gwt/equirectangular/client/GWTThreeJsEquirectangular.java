@@ -1,6 +1,7 @@
 package com.akjava.gwt.equirectangular.client;
 
 import com.akjava.gwt.equirectangular.client.app.HorizontalApp;
+import com.akjava.gwt.equirectangular.client.app.OceanApp;
 import com.akjava.gwt.equirectangular.client.app.TurnSkyboxApp;
 
 /**
@@ -17,7 +18,8 @@ public class GWTThreeJsEquirectangular extends GWTThreeJsEquirectangularBase {
 		if(app==null){
 			//modify by yourself
 			//app=new HorizontalApp();
-			app=new TurnSkyboxApp();
+			//app=new TurnSkyboxApp();
+			app=new OceanApp();
 		}
 		return app;
 	}
