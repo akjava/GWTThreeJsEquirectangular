@@ -82,7 +82,7 @@ public class TurnSkyboxApp extends AbstractApp {
 	
 
 	
-	public void update(){
+	public void animate(){
 		//LogUtils.log("update");
 		//group.getRotation().setX(-Math.PI/2);
 		

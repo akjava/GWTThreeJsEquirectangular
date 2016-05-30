@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import com.akjava.gwt.lib.client.LogUtils;
 import com.akjava.gwt.lib.client.experimental.ExecuteButton;
+import com.akjava.gwt.three.client.java.ui.AbstractThreeApp;
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.Scheduler;
@@ -186,6 +187,7 @@ public abstract class GWTThreeJsEquirectangularBase extends AbstractThreeApp imp
 			}
 		});
 		
+			addResizeHandler();
 
 	}
 	
@@ -245,7 +247,7 @@ public abstract class GWTThreeJsEquirectangularBase extends AbstractThreeApp imp
 		}
 		
 		
-		getEquirectangularApp().update();
+		getEquirectangularApp().animate();
 		
 		if(isRecording()){
 			if(!noPost.getValue()){

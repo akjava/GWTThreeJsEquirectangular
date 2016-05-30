@@ -33,7 +33,7 @@ public interface EquirectangularApp {
 	/*
 	 * every frame action,millisecond
 	 */
-	public  void update();
+	public  void animate();
 	
 	
 	public void onWindowResize(double w,double h);

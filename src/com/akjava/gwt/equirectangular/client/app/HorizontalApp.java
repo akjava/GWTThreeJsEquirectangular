@@ -223,7 +223,7 @@ public class HorizontalApp implements EquirectangularApp {
 	private int maxFrame;
 	private int currentFrame;
 	
-public void update(){
+public void animate(){
 		
 		controls.update();
 		
