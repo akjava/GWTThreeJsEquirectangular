@@ -47,7 +47,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 
-public class OceanApp extends AbstractApp{
+public class OceanApp extends AbstractEquirectangularApp{
 
 
 

@@ -5,7 +5,7 @@ import com.akjava.gwt.three.client.js.cameras.CubeCamera;
 import com.akjava.gwt.three.client.js.renderers.WebGLRenderer;
 import com.akjava.gwt.three.client.js.scenes.Scene;
 
-public abstract class AbstractApp implements EquirectangularApp{
+public abstract class AbstractEquirectangularApp implements EquirectangularApp{
 	protected WebGLRenderer renderer;
 	protected Scene scene;
 	protected CubeCamera cubeCamera;

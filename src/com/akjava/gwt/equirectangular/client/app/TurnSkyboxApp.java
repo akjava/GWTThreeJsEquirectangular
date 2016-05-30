@@ -16,7 +16,7 @@ import com.google.gwt.user.client.ui.FocusPanel;
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
-public class TurnSkyboxApp extends AbstractApp {
+public class TurnSkyboxApp extends AbstractEquirectangularApp {
 	
 	private PerspectiveCamera camera;
 	
