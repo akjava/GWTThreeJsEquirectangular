@@ -41,7 +41,7 @@ public abstract class GWTThreeJsEquirectangularBase extends AbstractThreeApp imp
 	private int currentFrameIndex=0;
 	
 	private double frameRate=30;
-	private int duration=1;
+	private int duration=0;
 	private int maxRecordFrameSize;
 	private ExecuteButton executeButton;
 
@@ -105,8 +105,8 @@ public abstract class GWTThreeJsEquirectangularBase extends AbstractThreeApp imp
 					
 				}
 			});
-			durationBox.setValue(1);
-			durationBox.setAcceptableValues(Lists.newArrayList(1,5,10,15,30,60,180));
+			durationBox.setValue(duration);
+			durationBox.setAcceptableValues(Lists.newArrayList(0,1,5,10,15,30,60,180));
 			
 			
 			controlPanel.add(new Label("duration"));
@@ -130,7 +130,7 @@ public abstract class GWTThreeJsEquirectangularBase extends AbstractThreeApp imp
 							
 							currentFrameIndex=0;//can try again?
 							extactor=new SixCubicImageExtractor(size, size, getEquirectangularApp().getCubeCamera());
-							maxRecordFrameSize=(int) (frameRate*duration);
+							maxRecordFrameSize=countMaxRecordFrameSize();
 							
 							getEquirectangularApp().startExtract(maxRecordFrameSize);
 							
@@ -157,6 +157,8 @@ public abstract class GWTThreeJsEquirectangularBase extends AbstractThreeApp imp
 							noPost.setEnabled(true);
 						}
 						
+						
+
 						@Override
 						public void onError(String message) {
 							// TODO Auto-generated method stub
@@ -193,7 +195,9 @@ public abstract class GWTThreeJsEquirectangularBase extends AbstractThreeApp imp
 	
 
 	
-
+	private int countMaxRecordFrameSize() {
+		return duration==0?1:(int) (frameRate*duration);
+	}
 
 
 
@@ -213,7 +217,7 @@ public abstract class GWTThreeJsEquirectangularBase extends AbstractThreeApp imp
 				LogUtils.log("received:"+response);
 				posting=false;
 				
-				int maxRecordFrameSize=(int) (frameRate*duration);
+				int maxRecordFrameSize=countMaxRecordFrameSize();
 				if(currentFrameIndex==maxRecordFrameSize){
 					onRecordEnd();
 				}

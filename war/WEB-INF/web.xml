@@ -16,7 +16,7 @@
 </servlet-mapping>
   
   
-  <servlet>
+<servlet>
 <servlet-name>SixCubicToEquirectangularServlet</servlet-name>
 <servlet-class>com.akjava.gwt.equirectangular.server.SixCubicToEquirectangularServlet</servlet-class>
 </servlet>

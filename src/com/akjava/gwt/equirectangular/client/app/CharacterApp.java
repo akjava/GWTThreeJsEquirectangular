@@ -34,7 +34,11 @@ import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.ui.FocusPanel;
 
-
+/**
+ * @deprecated move to GWT360VRCreator
+ * @author aki
+ *
+ */
 public class CharacterApp extends AbstractEquirectangularApp{
 
 
