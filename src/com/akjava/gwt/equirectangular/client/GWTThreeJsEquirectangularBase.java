@@ -173,7 +173,7 @@ public abstract class GWTThreeJsEquirectangularBase extends AbstractThreeApp imp
 			
 			controlPanel.add(executeButton);
 			
-			noPost = new CheckBox("no save");
+			noPost = new CheckBox("no write file(just test on recording)");
 			controlPanel.add(noPost);
 			
 			
