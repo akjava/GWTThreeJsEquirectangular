@@ -300,7 +300,7 @@ public class CharacterApp extends AbstractEquirectangularApp{
 		
 	}
 	
-	public void animate() {//GWT animateFrame has time
+	public void animate(double t) {//GWT animateFrame has time
 		
 		controls.update();
 		

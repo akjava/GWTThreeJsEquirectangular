@@ -401,7 +401,7 @@ public class OceanApp extends AbstractEquirectangularApp{
 	
 	private double timeSplit=60;
 
-	public void animate() {//GWT animateFrame has time
+	public void animate(double t) {//GWT animateFrame has time
 		double time = System.currentTimeMillis() * 0.001;
 	
 		sphere.getPosition().setY(Math.sin( time ) * 500 + 250);//sphere.position.y = Math.sin( time ) * 500 + 250;

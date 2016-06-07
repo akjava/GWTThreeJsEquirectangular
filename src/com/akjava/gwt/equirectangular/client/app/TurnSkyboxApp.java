@@ -82,7 +82,7 @@ public class TurnSkyboxApp extends AbstractEquirectangularApp {
 	
 
 	
-	public void animate(){
+	public void animate(double t){
 		//LogUtils.log("update");
 		//group.getRotation().setX(-Math.PI/2);
 		

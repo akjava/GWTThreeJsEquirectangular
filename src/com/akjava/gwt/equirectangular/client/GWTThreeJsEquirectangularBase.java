@@ -251,7 +251,7 @@ public abstract class GWTThreeJsEquirectangularBase extends AbstractThreeApp imp
 		}
 		
 		
-		getEquirectangularApp().animate();
+		getEquirectangularApp().animate(time);
 		
 		if(isRecording()){
 			if(!noPost.getValue()){
