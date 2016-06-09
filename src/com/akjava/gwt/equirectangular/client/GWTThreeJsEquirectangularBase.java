@@ -245,6 +245,9 @@ public abstract class GWTThreeJsEquirectangularBase extends AbstractThreeApp imp
 		return extactor!=null && currentFrameIndex<maxRecordFrameSize;
 	}
 	
+	//TODO make mthod
+	private int perRecord=1;
+	private int current=0;
 	public void animate(double time){
 		if(posting){//still posting to servlet
 			return;
@@ -255,6 +258,12 @@ public abstract class GWTThreeJsEquirectangularBase extends AbstractThreeApp imp
 		
 		if(isRecording()){
 			if(!noPost.getValue()){
+			if(current<perRecord){
+				current++;
+				return;
+			}else{
+				current=0;
+			}
 			extactor.update(getEquirectangularApp().getRenderer(), getEquirectangularApp().getScene());
 			uploadSixCubeFile();
 			currentFrameIndex++;
