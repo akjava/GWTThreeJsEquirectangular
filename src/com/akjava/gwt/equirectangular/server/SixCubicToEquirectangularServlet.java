@@ -1,11 +1,14 @@
 package com.akjava.gwt.equirectangular.server;
 
 import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 import javax.imageio.ImageIO;
@@ -70,7 +73,7 @@ public class SixCubicToEquirectangularServlet extends HttpServlet {
 		
 		Stopwatch totalWatch=Stopwatch.createStarted();
 		//just send filename & data & simply write it
-		String name=req.getParameter("name");
+		final String name=req.getParameter("name");
 		if(name==null){
 			resp.sendError(500,"no name");
 			return;
@@ -83,6 +86,8 @@ public class SixCubicToEquirectangularServlet extends HttpServlet {
 			images.add(null);
 		}
 		
+		long decode=0;
+		long makeImage=0;
 		for(int i=1;i<=6;i++){
 			String data=req.getParameter("image"+i);
 			
@@ -91,6 +96,7 @@ public class SixCubicToEquirectangularServlet extends HttpServlet {
 				return;
 			}
 			byte[] bytes=null;
+			
 			if(data.startsWith("data:")){
 				//TODO more check
 				int index=data.indexOf(";base64,");
@@ -98,9 +104,17 @@ public class SixCubicToEquirectangularServlet extends HttpServlet {
 					resp.sendError(500,"not base64");
 					return;
 				}
-				bytes=BaseEncoding.base64().decode(data.substring(index+";base64,".length()));
-				BufferedImage inputImage=ImageIO.read(new ByteArrayInputStream(bytes));
+				Stopwatch decodeWatch=Stopwatch.createStarted();
 				
+				bytes=BaseEncoding.base64().decode(data.substring(index+";base64,".length()));
+				decode+=decodeWatch.elapsed(TimeUnit.MILLISECONDS);
+				Stopwatch makeImageWatch=Stopwatch.createStarted();
+				BufferedImage inputImage=ImageIO.read(
+						//new BufferedInputStream( //I'm not sure improve speed
+						new ByteArrayInputStream(bytes)
+						//,1024*1024)
+						);
+				makeImage+=makeImageWatch.elapsed(TimeUnit.MILLISECONDS);
 				/*
 				 * from "up","down","front","back","right","left"
  CUBE_TOP,
@@ -150,24 +164,41 @@ CUBE_DOWN,
 			SixCubicToEquirectangler.map=null;
 		}
 		
-		BufferedImage outputImage=converter.convertImage(images);
+		final BufferedImage outputImage=converter.convertImage(images);
 		
 		lastSize=size;
 		
-		//don't care encode
-		
-		File file=new File(getBaseDirectory()+name);
-		
-		ImageIO.write(outputImage, "png", file);
-		
 		long total=totalWatch.elapsed(TimeUnit.MILLISECONDS);
+		//long write=writeWatch.elapsed(TimeUnit.MILLISECONDS);
+		new Timer().schedule(new TimerTask() {
+			//writing consume half time,now do it background
+			@Override
+			public void run() {
+				File file=new File(getBaseDirectory()+name);
+				try {
+					ImageIO.write(outputImage, "png", file);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}, 10);
+		resp.getWriter().println("ok:create-time(ms)="+total+",genmap="+converter.genMapTime+",decode="+decode+",makeImage="+makeImage);
+		
+		//resp.getWriter().println("ok:create-time(ms)="+total+",genmap="+converter.genMapTime+",write="+write+",decode="+decode+",makeImage="+makeImage);
+		
+		
+		//don't care encode
+		Stopwatch writeWatch=Stopwatch.createStarted();
+		
+		
+		
 		/**
 		 * 
 		 * 2048x1028 1000ms
 		 * 4096x2048 50000ms on 512MB servlet
 		 * 
 		 */
-		resp.getWriter().println("ok:create-time(ms)="+total+",genmap="+converter.genMapTime);
 		//TODO
 		//call nona,optional 
 	}
