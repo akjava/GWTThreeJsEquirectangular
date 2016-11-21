@@ -57,6 +57,8 @@ public class SixCubicToEquirectangularServlet extends HttpServlet {
 		return dir;
 	}
 	
+
+	
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 		throws ServletException, IOException {

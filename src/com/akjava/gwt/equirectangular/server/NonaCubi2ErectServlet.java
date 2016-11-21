@@ -11,6 +11,11 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.common.io.BaseEncoding;
 import com.google.common.io.Files;
 
+/**
+ * @deprecated use Base64FileSaveServlet
+ * @author aki
+ *
+ */
 public class NonaCubi2ErectServlet extends HttpServlet {
 
 	/**

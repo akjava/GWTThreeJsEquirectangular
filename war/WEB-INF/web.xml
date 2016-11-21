@@ -15,7 +15,23 @@
 <url-pattern>/write</url-pattern>
 </servlet-mapping>
   
+  <servlet>
+<servlet-name>Base64FileSaveServlet</servlet-name>
+<servlet-class>com.akjava.gwt.equirectangular.server.Base64FileSaveServlet</servlet-class>
+ 
+ <init-param>
+  <param-name>directory</param-name>
+  <param-value>s:\download\nonadatas</param-value>
+  </init-param>
   
+</servlet>
+<servlet-mapping>
+<servlet-name>Base64FileSaveServlet</servlet-name>
+<url-pattern>/base64write</url-pattern>
+
+ 
+</servlet-mapping>
+
 <servlet>
 <servlet-name>SixCubicToEquirectangularServlet</servlet-name>
 <servlet-class>com.akjava.gwt.equirectangular.server.SixCubicToEquirectangularServlet</servlet-class>
