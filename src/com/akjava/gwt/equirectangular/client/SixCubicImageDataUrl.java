@@ -24,6 +24,10 @@ public  class SixCubicImageDataUrl{
 		all.add(right);
 		all.add(left);
 	}
+	public SixCubicImageDataUrl(String up){
+		super();
+		all.add(up);
+	}
 	
 	public String getUp() {
 		return all.get(0);

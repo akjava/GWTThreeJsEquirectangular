@@ -26,7 +26,7 @@
 	<inherits name='com.akjava.gwt.jszip.GWTJSZip' />
 	<!-- Specify the app entry point class.                         -->
 	<entry-point
-		class='com.akjava.gwt.equirectangular.client.GWTThreeJsEquirectangular' />
+		class='com.akjava.gwt.equirectangular.client.JsVersion' />
 
 	<!-- Specify the paths for translatable code                    -->
 	<source path='client' />

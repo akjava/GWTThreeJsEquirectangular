@@ -104,7 +104,8 @@ public class CharacterApp extends AbstractEquirectangularApp{
 
 		
 		
-		cubeCamera=THREE.CubeCamera(NEAR, FAR, 512);
+		//cubeCamera=THREE.CubeCamera(NEAR, FAR, 512);
+		cubeCamera=THREE.CubeCamera(.0001, 1000, 2048);
 		cubeCamera.setPosition(0, 500, 0 );
 		//cubeCamera.getRotation().setX(Math.toRadians(-90));
 		
