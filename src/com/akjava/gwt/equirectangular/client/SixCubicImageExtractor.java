@@ -7,7 +7,7 @@ import com.akjava.gwt.three.client.js.renderers.WebGLRenderTarget;
 import com.akjava.gwt.three.client.js.renderers.WebGLRenderer;
 import com.akjava.gwt.three.client.js.scenes.Scene;
 
-public class SixCubicImageExtractor {
+public class SixCubicImageExtractor implements EquirectangularImageExtractor{
 	private int width;
 	public int getWidth() {
 		return width;

@@ -68,7 +68,7 @@ public class Base64FileSaveServlet extends HttpServlet {
 			throws ServletException, IOException {
 		
 		String directory=getBaseDirectory();
-		System.out.println(directory);//test
+		//System.out.println(directory);//debug
 		
 		String command=req.getParameter("command");
 		if(command!=null && command.equals("clear")){

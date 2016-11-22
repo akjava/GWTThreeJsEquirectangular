@@ -5,6 +5,7 @@ import java.io.IOException;
 import com.akjava.gwt.lib.client.LogUtils;
 import com.akjava.gwt.lib.client.experimental.ExecuteButton;
 import com.akjava.gwt.three.client.java.ui.AbstractThreeApp;
+import com.akjava.gwt.three.client.js.cameras.CubeCamera;
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.Scheduler;
@@ -33,7 +34,7 @@ public abstract class GWTThreeJsEquirectangularBase extends AbstractThreeApp imp
 
 	private HorizontalPanel controlPanel;
 	//private SixCubeRecorder recorder;
-	private SixCubicImageExtractor extactor;
+	private EquirectangularImageExtractor extactor;
 	
 	//private int imageSize=1024;
 	
@@ -129,7 +130,7 @@ public abstract class GWTThreeJsEquirectangularBase extends AbstractThreeApp imp
 							duration=durationBox.getValue();
 							
 							currentFrameIndex=0;//can try again?
-							extactor=new SixCubicImageExtractor(size, size, getEquirectangularApp().getCubeCamera());
+							extactor=getEquirectangularImageExtractor(size,getEquirectangularApp().getCubeCamera());
 							maxRecordFrameSize=countMaxRecordFrameSize();
 							
 							getEquirectangularApp().startExtract(maxRecordFrameSize);
@@ -205,7 +206,7 @@ public abstract class GWTThreeJsEquirectangularBase extends AbstractThreeApp imp
 		int imageSize=extactor.getWidth();
 		SixCubicImageDataUrl frame=extactor.getImageDataUrls();
 		
-		SixCubeFrameIO.postToSixCubeServlet(imageSize,currentFrameIndex, frame,new PostListener(){
+		getServletSender().postToServlet(imageSize,currentFrameIndex, frame,new PostListener(){
 
 			@Override
 			public void onError(String message) {
@@ -224,8 +225,14 @@ public abstract class GWTThreeJsEquirectangularBase extends AbstractThreeApp imp
 			}});//simple post
 		
 		posting=true;
-
-		//SixCubeFrameIO.postTextData("I:\\Program Files\\Hugin\\bin\\nona.exe",512, frameSize);
+	}
+	
+	public EquirectangularImageExtractor getEquirectangularImageExtractor(int size,CubeCamera camera){
+		return new SixCubicImageExtractor(size, size, camera);
+	}
+	
+	public ServletSender getServletSender(){
+		return new SixCubeServletSender();
 	}
 	
 	private void onRecordEnd() {

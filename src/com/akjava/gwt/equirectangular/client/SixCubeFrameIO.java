@@ -66,7 +66,14 @@ public class SixCubeFrameIO {
 		simplePostToWrite("ffmpeg_image2movie.bat",new FFMpegBatchGenerator("s:\\download\\ffmpeg2.7.1\\bin\\ffmpeg.exe", 24, "output.mp4").createBatch());
 	}
 	
-	public static void postToSixCubeServlet(int size,int index,SixCubicImageDataUrl frame,PostListener listener){
+	/**
+	 * @deprecated now converted interface
+	 * @param size
+	 * @param index
+	 * @param frame
+	 * @param listener
+	 */
+	public static void postToServlet(int size,int index,SixCubicImageDataUrl frame,PostListener listener){
 		postToSixCube(size,toIndex(index)+".png",frame.getAll(),listener);
 	}
 	//post to NonaCubi2ErectServlet
@@ -99,6 +106,37 @@ public class SixCubeFrameIO {
 		StringBuilder sb = new StringBuilder();
 		sb.append("command").append("=").append("clear");
 
+		try{
+			Request response  =builder.sendRequest(sb.toString(), new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					if(listener!=null)
+					listener.onReceived(response.getText());
+				}
+				
+				@Override
+				public void onError(Request request, Throwable exception) {
+					if(listener!=null)
+					listener.onError(exception.getMessage());
+				}
+			});
+		}catch(Exception e){}
+	}
+	
+	public static void postToSingleFile(final int size,final String fileName,List<String> datas,final PostListener listener){
+		RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, "/base64write");
+		builder.setHeader("Content-type", "application/x-www-form-urlencoded");
+		StringBuilder sb = new StringBuilder();
+		sb.append("size").append("=").append(size);
+		sb.append("&");
+		sb.append("name").append("=").append(URL.encodeQueryString(fileName));
+		
+		
+		//just add single file version
+			sb.append("&");
+			sb.append("data").append("=").append(URL.encodeQueryString(datas.get(0)));
+		
+		
 		try{
 			Request response  =builder.sendRequest(sb.toString(), new RequestCallback() {
 				@Override
