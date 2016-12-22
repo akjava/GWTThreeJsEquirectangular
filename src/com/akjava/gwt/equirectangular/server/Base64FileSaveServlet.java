@@ -44,7 +44,7 @@ public class Base64FileSaveServlet extends HttpServlet {
 		String directory=getInitParameter("directory");
 		String fileSeparator=System.getProperty("file.separator");
 		if(directory==null){
-			directory=System.getProperty("user.home");
+			directory=System.getProperty("user.home")+fileSeparator+"gwtthreejsequirectangular";
 		}
 		
 		if(!directory.endsWith(fileSeparator)){
