@@ -53,8 +53,17 @@ public class SixCubicToEquirectangularServlet extends HttpServlet {
 	}
 	
 	private String getBaseDirectory(){
-		String dir="s:\\download\\nonadatas\\";
-		return dir;
+		String directory=getInitParameter("directory");
+		String fileSeparator=System.getProperty("file.separator");
+		if(directory==null){
+			directory=System.getProperty("user.home");
+		}
+		
+		if(!directory.endsWith(fileSeparator)){
+			//TODO check endless contnue "\\\\\\\"
+			directory=directory+fileSeparator;
+		}
+		return directory;
 	}
 	
 

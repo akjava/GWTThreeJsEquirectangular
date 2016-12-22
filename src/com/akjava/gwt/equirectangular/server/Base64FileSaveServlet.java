@@ -42,13 +42,14 @@ public class Base64FileSaveServlet extends HttpServlet {
 	
 	private String getBaseDirectory(){
 		String directory=getInitParameter("directory");
+		String fileSeparator=System.getProperty("file.separator");
 		if(directory==null){
-			directory="s:\\download\\nonadatas\\";
-		}else{
-			if(!directory.endsWith("\\")){
-				//TODO check endless contnue "\\\\\\\"
-				directory=directory+"\\";
-			}
+			directory=System.getProperty("user.home");
+		}
+		
+		if(!directory.endsWith(fileSeparator)){
+			//TODO check endless contnue "\\\\\\\"
+			directory=directory+fileSeparator;
 		}
 		return directory;
 	}
