@@ -272,7 +272,7 @@ public class CharacterApp extends AbstractEquirectangularApp{
 						MeshPhongMaterial material = THREE.MeshPhongMaterial( GWTParamUtils.MeshPhongMaterial().vertexColors(THREE.FaceColors).shininess(100).envMap(cubeMap) );//var material = new THREE.MeshPhongMaterial( {vertexColors: THREE.FaceColors,shininess: 100,envMap: cubeMap} );
 
 						sphere = THREE.Mesh( geometry, material );//sphere = new THREE.Mesh( geometry, material );
-						//scene.add( sphere );
+						scene.add( sphere );
 					
 	}
 

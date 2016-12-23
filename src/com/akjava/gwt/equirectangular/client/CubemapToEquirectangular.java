@@ -13,7 +13,7 @@ protected CubemapToEquirectangular(){}
 
 //only support unmanaged version
 public final static native CubemapToEquirectangular create(WebGLRenderer renderer)/*-{
-	return new $wnd.CubemapToEquirectangular( renderer, true );
+	return new $wnd.CubemapToEquirectangular( renderer, false );
 }-*/;
 
 
