@@ -25,7 +25,7 @@ public class Base64FileSaveServlet extends HttpServlet {
 	private boolean clearImages(){
 		File file=new File(getBaseDirectory());
 		if(!file.exists()){
-			System.out.println("not exist:"+getBaseDirectory());
+			System.out.println("Base64FileSaveServlet-faild clear images:not exist:"+getBaseDirectory());
 			return false;
 		}
 
@@ -112,7 +112,7 @@ public class Base64FileSaveServlet extends HttpServlet {
 		Files.write(bytes, file);
 		
 		
-		resp.getWriter().println(bytes.length);
+		resp.getWriter().println("Base64FileSaveServlet:written "+bytes.length);
 		//TODO
 		//call nona,optional 
 	}

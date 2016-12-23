@@ -17,12 +17,12 @@ public class SixCubeFrameIO {
 
 	public static final List<String> directions=ImmutableList.of("up","down","front","back","right","left");
 	
-	public static JSZip toZip(List<SixCubicImageDataUrl> frames){
+	public static JSZip toZip(List<UploadImageDataUrls> frames){
 		JSZip zip=JSZip.newJSZip();
 		
 		for(int i=0;i<frames.size();i++){
 			String index=toIndex(i+1);
-			SixCubicImageDataUrl frame=frames.get(i);
+			UploadImageDataUrls frame=frames.get(i);
 			
 			zip.base64UrlFile(index+"_up"+".png", frame.getUp());
 			zip.base64UrlFile(index+"_down"+".png", frame.getDown());
@@ -47,7 +47,7 @@ public class SixCubeFrameIO {
 	}
 	
 	
-	public static void postImageData(int index,SixCubicImageDataUrl frame){
+	public static void postImageData(int index,UploadImageDataUrls frame){
 		simplePostToWrite(toIndex(index)+"_up"+".png", frame.getUp());
 		simplePostToWrite(toIndex(index)+"_down"+".png", frame.getDown());
 		simplePostToWrite(toIndex(index)+"_front"+".png", frame.getFront());
@@ -73,9 +73,10 @@ public class SixCubeFrameIO {
 	 * @param frame
 	 * @param listener
 	 */
-	public static void postToServlet(int size,int index,SixCubicImageDataUrl frame,PostListener listener){
+	public static void postToServlet(int size,int index,UploadImageDataUrls frame,PostListener listener){
 		postToSixCube(size,toIndex(index)+".png",frame.getAll(),listener);
 	}
+	
 	//post to NonaCubi2ErectServlet
 	public static void simplePostToWrite(final String fileName,String data){
 		RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, "/write");// TODO
@@ -100,8 +101,8 @@ public class SixCubeFrameIO {
 		}catch(Exception e){}
 	}
 	
-	public static void callClearImages(final PostListener listener){
-		RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, "/sixcube");
+	public static void callClearImages(final PostListener listener,String pagePath){
+		RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, "/"+pagePath);
 		builder.setHeader("Content-type", "application/x-www-form-urlencoded");
 		StringBuilder sb = new StringBuilder();
 		sb.append("command").append("=").append("clear");

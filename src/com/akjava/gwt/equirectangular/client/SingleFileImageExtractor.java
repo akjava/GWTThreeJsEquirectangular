@@ -27,8 +27,8 @@ private CubemapToEquirectangular cubemapToEquirectangular;
 
 	//update first
 	@Override
-	public SixCubicImageDataUrl getImageDataUrls() {
-		return new SixCubicImageDataUrl(lastDataUrl);
+	public UploadImageDataUrls getImageDataUrls() {
+		return new UploadImageDataUrls(lastDataUrl);
 	}
 
 	private String lastDataUrl;

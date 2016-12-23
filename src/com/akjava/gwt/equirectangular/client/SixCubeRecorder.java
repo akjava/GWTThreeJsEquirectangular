@@ -115,7 +115,7 @@ public class SixCubeRecorder {
 		String right=targetRight.gwtTextureToCanvas(renderer).toDataUrl();
 		String left=targetLeft.gwtTextureToCanvas(renderer).toDataUrl();
 		
-		frames.add(new SixCubicImageDataUrl(up, down, front, back, right, left));
+		frames.add(new UploadImageDataUrls(up, down, front, back, right, left));
 		
 		camera.getRotation().copy(original);//reback
 	}
@@ -152,9 +152,9 @@ public class SixCubeRecorder {
 
 				    return canvas.toDataURL();
 	}-*/;
-	private List<SixCubicImageDataUrl> frames=new ArrayList<SixCubicImageDataUrl>();
+	private List<UploadImageDataUrls> frames=new ArrayList<UploadImageDataUrls>();
 	
-	public List<SixCubicImageDataUrl> getFrames() {
+	public List<UploadImageDataUrls> getFrames() {
 		return frames;
 	}
 	

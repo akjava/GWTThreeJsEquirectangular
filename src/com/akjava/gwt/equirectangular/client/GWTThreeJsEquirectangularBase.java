@@ -165,7 +165,7 @@ public abstract class GWTThreeJsEquirectangularBase extends AbstractThreeApp imp
 							// TODO Auto-generated method stub
 							LogUtils.log("error on clear image:"+message);
 						}
-					});
+					},getServletSender().getClearPagePath());
 					
 				
 					
@@ -202,9 +202,9 @@ public abstract class GWTThreeJsEquirectangularBase extends AbstractThreeApp imp
 
 
 
-	private void uploadSixCubeFile(){
+	private void uploadToServletSender(){
 		int imageSize=extactor.getWidth();
-		SixCubicImageDataUrl frame=extactor.getImageDataUrls();
+		UploadImageDataUrls frame=extactor.getImageDataUrls();
 		
 		getServletSender().postToServlet(imageSize,currentFrameIndex, frame,new PostListener(){
 
@@ -228,10 +228,12 @@ public abstract class GWTThreeJsEquirectangularBase extends AbstractThreeApp imp
 	}
 	
 	public EquirectangularImageExtractor getEquirectangularImageExtractor(int size,CubeCamera camera){
+		LogUtils.log("SixCubicImageExtractor called");
 		return new SixCubicImageExtractor(size, size, camera);
 	}
 	
 	public ServletSender getServletSender(){
+		LogUtils.log("SixCubeServletSender called");
 		return new SixCubeServletSender();
 	}
 	
@@ -287,7 +289,7 @@ public abstract class GWTThreeJsEquirectangularBase extends AbstractThreeApp imp
 				current=1;
 			}
 			extactor.update(getEquirectangularApp().getRenderer(), getEquirectangularApp().getScene());
-			uploadSixCubeFile();
+			uploadToServletSender();
 			currentFrameIndex++;
 			}else{
 				currentFrameIndex++;

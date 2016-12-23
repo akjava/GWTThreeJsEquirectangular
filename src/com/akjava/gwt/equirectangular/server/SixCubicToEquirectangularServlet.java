@@ -1,7 +1,6 @@
 package com.akjava.gwt.equirectangular.server;
 
 import java.awt.image.BufferedImage;
-import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -37,7 +36,7 @@ public class SixCubicToEquirectangularServlet extends HttpServlet {
 	private boolean clearImages(){
 		File file=new File(getBaseDirectory());
 		if(!file.exists()){
-			System.out.println("not exist:"+getBaseDirectory());
+			System.out.println("SixCubicToEquirectangularServlet-faild clear images:not exist:"+getBaseDirectory());
 			return false;
 		}
 
@@ -176,7 +175,7 @@ CUBE_DOWN,
 		}
 		
 		final BufferedImage outputImage=converter.convertImage(images);
-		
+		final BufferedImage blurImage=new BlurFilter().processImage(outputImage);
 		lastSize=size;
 		
 		long total=totalWatch.elapsed(TimeUnit.MILLISECONDS);
@@ -187,14 +186,15 @@ CUBE_DOWN,
 			public void run() {
 				File file=new File(getBaseDirectory()+name);
 				try {
-					ImageIO.write(outputImage, "png", file);
+					ImageIO.write(blurImage, "png", file);
+					//ImageIO.write(outputImage, "png", file);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
 		}, 10);
-		resp.getWriter().println("ok:create-time(ms)="+total+",genmap="+converter.genMapTime+",decode="+decode+",makeImage="+makeImage);
+		resp.getWriter().println("SixCubicToEquirectangularServlet ok:create-time(ms)="+total+",genmap="+converter.genMapTime+",decode="+decode+",makeImage="+makeImage);
 		
 		//resp.getWriter().println("ok:create-time(ms)="+total+",genmap="+converter.genMapTime+",write="+write+",decode="+decode+",makeImage="+makeImage);
 		

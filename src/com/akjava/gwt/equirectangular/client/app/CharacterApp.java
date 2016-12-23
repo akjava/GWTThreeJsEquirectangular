@@ -105,7 +105,7 @@ public class CharacterApp extends AbstractEquirectangularApp{
 		
 		
 		//cubeCamera=THREE.CubeCamera(NEAR, FAR, 512);
-		cubeCamera=THREE.CubeCamera(.0001, 1000, 2048);
+		cubeCamera=THREE.CubeCamera(1, 20000, 2048);
 		cubeCamera.setPosition(0, 500, 0 );
 		//cubeCamera.getRotation().setX(Math.toRadians(-90));
 		
@@ -136,13 +136,15 @@ public class CharacterApp extends AbstractEquirectangularApp{
 
 			@Override
 			public void loaded(Geometry geometry, JsArray<Material> materials) {
-				SkinnedMesh mesh=THREE.SkinnedMesh(geometry, THREE.MeshPhongMaterial(GWTParamUtils.MeshPhongMaterial().map(texture)
+				final SkinnedMesh mesh=THREE.SkinnedMesh(geometry, THREE.MeshPhongMaterial(GWTParamUtils.MeshPhongMaterial().map(texture)
 						.skinning(true)
 						.morphTargets(true)
 						));
 				
+				int scale=5;
+				
 				mesh.getScale().setScalar(1000);
-				mesh.setPosition(0,-500, -200);
+				mesh.setPosition(0,-500*scale, -200*scale);
 				controls.getTarget().set(0,-500,-400);
 				scene.add(mesh);
 				
@@ -155,7 +157,7 @@ public class CharacterApp extends AbstractEquirectangularApp{
 						));
 				
 				mesh2.getScale().setScalar(1000);
-				mesh2.setPosition(0,-500, 400);
+				mesh2.setPosition(0,-500*scale, 400*scale);
 				mesh2.getRotation().setY(Math.toRadians(180));
 				scene.add(mesh2);
 				mixer2=THREE.AnimationMixer(mesh2);
@@ -166,7 +168,7 @@ public class CharacterApp extends AbstractEquirectangularApp{
 						));
 				
 				mesh3.getScale().setScalar(1000);
-				mesh3.setPosition(-800,-500, 0);
+				mesh3.setPosition(-800*scale,-500*scale, 0);
 				mesh3.getRotation().setY(Math.toRadians(90));
 				scene.add(mesh3);
 				mixer3=THREE.AnimationMixer(mesh3);
@@ -179,6 +181,9 @@ public class CharacterApp extends AbstractEquirectangularApp{
 						AnimationClip clip=AnimationClip.parse(value.isObject().getJavaScriptObject());
 						
 						mixer.clipAction(clip).play();
+						mesh.getGeometry().computeBoundingBox();//usually camera problem
+						mesh.getGeometry().computeBoundingSphere();
+						
 						mixer2.clipAction(clip).startAt(1).play();
 						mixer3.clipAction(clip).startAt(2).play();
 					}
@@ -251,7 +256,7 @@ public class CharacterApp extends AbstractEquirectangularApp{
 						skyBoxMaterial
 						);
 
-						scene.add( skyBox );
+					//	scene.add( skyBox );
 
 					
 						IcosahedronGeometry geometry = THREE.IcosahedronGeometry( 400, 4 );//var geometry = new THREE.IcosahedronGeometry( 400, 4 );

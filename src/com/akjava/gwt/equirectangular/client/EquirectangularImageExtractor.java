@@ -5,6 +5,6 @@ import com.akjava.gwt.three.client.js.scenes.Scene;
 
 public interface EquirectangularImageExtractor {
 	public int getWidth();
-	public SixCubicImageDataUrl getImageDataUrls();
+	public UploadImageDataUrls getImageDataUrls();
 	public void update(WebGLRenderer renderer,Scene scene);
 }

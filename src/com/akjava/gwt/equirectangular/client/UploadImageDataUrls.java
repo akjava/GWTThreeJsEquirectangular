@@ -3,7 +3,7 @@ package com.akjava.gwt.equirectangular.client;
 import java.util.ArrayList;
 import java.util.List;
 
-public  class SixCubicImageDataUrl{
+public  class UploadImageDataUrls{
 	private List<String> all=new ArrayList<String>();
 	
 	/**
@@ -15,7 +15,7 @@ public  class SixCubicImageDataUrl{
 	 * @param right positive X
 	 * @param left negative X
 	 */
-	public SixCubicImageDataUrl(String up, String down, String front, String back, String right, String left) {
+	public UploadImageDataUrls(String up, String down, String front, String back, String right, String left) {
 		super();
 		all.add(up);
 		all.add(down);
@@ -24,7 +24,7 @@ public  class SixCubicImageDataUrl{
 		all.add(right);
 		all.add(left);
 	}
-	public SixCubicImageDataUrl(String up){
+	public UploadImageDataUrls(String up){
 		super();
 		all.add(up);
 	}

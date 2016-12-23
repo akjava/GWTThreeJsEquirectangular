@@ -4,6 +4,11 @@ import com.akjava.gwt.equirectangular.client.app.CharacterApp;
 import com.akjava.gwt.three.client.js.cameras.CubeCamera;
 import com.google.gwt.core.client.EntryPoint;
 
+/**
+ * Test using CubemapToEquirectangular.js
+ * @author aki
+ *
+ */
 public class JsVersion extends GWTThreeJsEquirectangularBase {
 	
 	
@@ -26,6 +31,7 @@ public class JsVersion extends GWTThreeJsEquirectangularBase {
 		return new SingleFileImageExtractor(size, camera);
 	}
 	
+	@Override
 	public ServletSender getServletSender(){
 		return new SingleFileServletSender();
 	}

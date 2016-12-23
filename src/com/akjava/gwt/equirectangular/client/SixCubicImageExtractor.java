@@ -63,13 +63,13 @@ public class SixCubicImageExtractor implements EquirectangularImageExtractor{
 		String nzDataUrl=target.gwtTextureToCanvas(renderer).toDataUrl();
 
 
-		imageDataUrls=new SixCubicImageDataUrl(pyDataUrl, nyDataUrl, pzDataUrl, nzDataUrl, pxDataUrl, nxDataUrl);
+		imageDataUrls=new UploadImageDataUrls(pyDataUrl, nyDataUrl, pzDataUrl, nzDataUrl, pxDataUrl, nxDataUrl);
 		
 	}
 	
-	private SixCubicImageDataUrl imageDataUrls;
+	private UploadImageDataUrls imageDataUrls;
 
-	public SixCubicImageDataUrl getImageDataUrls() {
+	public UploadImageDataUrls getImageDataUrls() {
 		return imageDataUrls;
 	}
 }
