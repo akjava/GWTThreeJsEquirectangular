@@ -17,6 +17,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.akjava.gwt.equirectangular.server.external.com.jhlabs.image.GaussianFilter;
+import com.akjava.gwt.equirectangular.server.external.com.jhlabs.image.UnsharpFilter;
 import com.akjava.lib.common.utils.ValuesUtils;
 import com.google.common.base.Stopwatch;
 import com.google.common.io.BaseEncoding;
@@ -174,9 +176,20 @@ CUBE_DOWN,
 			SixCubicToEquirectangler.map=null;
 		}
 		
+		//TODO get from request
 		final BufferedImage outputImage=converter.convertImage(images);
-		final BufferedImage blurImage=new BlurFilter().processImage(outputImage);
+		BufferedImage tmp1=new GaussianFilter(6).filter(outputImage,null);
+		UnsharpFilter unsharp=new UnsharpFilter();
+		unsharp.setAmount(0.5f);
+		unsharp.setRadius(4);
+		BufferedImage tmp2=unsharp.filter(tmp1,null);
+		
+		final BufferedImage finalImage=tmp2;
+		
+		
 		lastSize=size;
+		
+		
 		
 		long total=totalWatch.elapsed(TimeUnit.MILLISECONDS);
 		//long write=writeWatch.elapsed(TimeUnit.MILLISECONDS);
@@ -186,7 +199,7 @@ CUBE_DOWN,
 			public void run() {
 				File file=new File(getBaseDirectory()+name);
 				try {
-					ImageIO.write(blurImage, "png", file);
+					ImageIO.write(finalImage, "png", file);
 					//ImageIO.write(outputImage, "png", file);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block

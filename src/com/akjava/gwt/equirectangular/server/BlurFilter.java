@@ -4,6 +4,11 @@ import java.awt.image.BufferedImageOp;
 import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
 
+/**
+ * extream simple 3x3 fixed BlurFilter
+ * @author aki
+ *
+ */
 public class BlurFilter  {
 	public BufferedImage processImage(BufferedImage image) {
 		final float[] datas={

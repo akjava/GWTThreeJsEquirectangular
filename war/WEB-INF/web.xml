@@ -27,6 +27,7 @@
 </servlet>
 <servlet-mapping>
 <servlet-name>Base64FileSaveServlet</servlet-name>
+<!-- don't modify, some class using this path -->
 <url-pattern>/base64write</url-pattern>
 
  
@@ -34,10 +35,17 @@
 
 <servlet>
 <servlet-name>SixCubicToEquirectangularServlet</servlet-name>
-<servlet-class>com.akjava.gwt.equirectangular.server.SixCubicToEquirectangularServlet</servlet-class>
+<servlet-class>com.akjava.gwt.equirectangular.server.SixCubicToEquirectangularServlet</servlet-class>]
+
+ <init-param>
+  <param-name>directory</param-name>
+  <param-value>s:\download\nonadatas</param-value>
+  </init-param>
+  
 </servlet>
 <servlet-mapping>
 <servlet-name>SixCubicToEquirectangularServlet</servlet-name>
+<!-- don't modify, some class using this path -->
 <url-pattern>/sixcube</url-pattern>
 </servlet-mapping>
 
