@@ -80,6 +80,7 @@ public class CharacterApp extends AbstractEquirectangularApp{
 		
 		renderer.setPixelRatio( GWTThreeUtils.getWindowDevicePixelRatio() );//renderer.setPixelRatio( window.devicePixelRatio );
 		renderer.setSize( WIDTH, HEIGHT );
+		renderer.setAutoClear(true);
 
 		// scene
 		scene = THREE.Scene();//scene = new THREE.Scene();
@@ -105,8 +106,9 @@ public class CharacterApp extends AbstractEquirectangularApp{
 		
 		
 		//cubeCamera=THREE.CubeCamera(NEAR, FAR, 512);
-		cubeCamera=THREE.CubeCamera(1, 20000, 2048);
+		cubeCamera=THREE.CubeCamera(.1, 1000, 2048);
 		cubeCamera.setPosition(0, 500, 0 );
+		//scene.add(cubeCamera);//need?
 		//cubeCamera.getRotation().setX(Math.toRadians(-90));
 		
 		container.getElement().appendChild( renderer.getDomElement() );
@@ -134,9 +136,11 @@ public class CharacterApp extends AbstractEquirectangularApp{
 
 			
 
+			
+
 			@Override
 			public void loaded(Geometry geometry, JsArray<Material> materials) {
-				final SkinnedMesh mesh=THREE.SkinnedMesh(geometry, THREE.MeshPhongMaterial(GWTParamUtils.MeshPhongMaterial().map(texture)
+				mesh = THREE.SkinnedMesh(geometry, THREE.MeshPhongMaterial(GWTParamUtils.MeshPhongMaterial().map(texture)
 						.skinning(true)
 						.morphTargets(true)
 						));
@@ -181,8 +185,7 @@ public class CharacterApp extends AbstractEquirectangularApp{
 						AnimationClip clip=AnimationClip.parse(value.isObject().getJavaScriptObject());
 						
 						mixer.clipAction(clip).play();
-						mesh.getGeometry().computeBoundingBox();//usually camera problem
-						mesh.getGeometry().computeBoundingSphere();
+						
 						
 						mixer2.clipAction(clip).startAt(1).play();
 						mixer3.clipAction(clip).startAt(2).play();
@@ -305,7 +308,7 @@ public class CharacterApp extends AbstractEquirectangularApp{
 		renderer.setSize( WIDTH , HEIGHT );
 		
 	}
-	
+	private SkinnedMesh mesh;
 	public void animate(double t) {//GWT animateFrame has time
 		
 		controls.update();
@@ -315,6 +318,8 @@ public class CharacterApp extends AbstractEquirectangularApp{
 		renderer.render(scene, camera);
 		if(mixer!=null){
 			mixer.update(1.0/30);//fix
+				//mesh.getGeometry().computeBoundingBox();//usually camera problem fix
+				//mesh.getGeometry().computeBoundingSphere();
 			mixer2.update(1.0/30);//fix
 			mixer3.update(1.0/30);//fix
 		}

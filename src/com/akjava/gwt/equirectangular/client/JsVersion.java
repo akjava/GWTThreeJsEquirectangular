@@ -6,6 +6,14 @@ import com.google.gwt.core.client.EntryPoint;
 
 /**
  * Test using CubemapToEquirectangular.js
+ * Not working yet,only render skymap
+ * 
+ * I tested 
+ * add cubecamera to scene
+ * move chracter to far
+ * modify camera far and near
+ * compute bounding box & sphere on mixer.update
+ * render autoclear no effect
  * @author aki
  *
  */
