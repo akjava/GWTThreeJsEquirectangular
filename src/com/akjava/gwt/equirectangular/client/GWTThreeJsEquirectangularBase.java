@@ -42,6 +42,15 @@ public abstract class GWTThreeJsEquirectangularBase extends AbstractThreeApp imp
 	private int currentFrameIndex=0;
 	
 	private double frameRate=30;
+	public double getFrameRate() {
+		return frameRate;
+	}
+
+
+	public void setFrameRate(double frameRate) {
+		this.frameRate = frameRate;
+	}
+
 	private int duration=0;
 	private int maxRecordFrameSize;
 	private ExecuteButton executeButton;
@@ -88,7 +97,7 @@ public abstract class GWTThreeJsEquirectangularBase extends AbstractThreeApp imp
 			sizeBox.setAcceptableValues(Lists.newArrayList(256,512,1024,2048));
 			
 			controlPanel.setVerticalAlignment(HorizontalPanel.ALIGN_MIDDLE);
-			controlPanel.add(new Label("image-size"));
+			controlPanel.add(new Label("each-image-size"));
 			controlPanel.add(sizeBox);
 			
 			
@@ -112,6 +121,7 @@ public abstract class GWTThreeJsEquirectangularBase extends AbstractThreeApp imp
 			
 			controlPanel.add(new Label("duration"));
 			controlPanel.add(durationBox);
+			controlPanel.add(new Label("sec"));
 			
 			executeButton = new ExecuteButton("Record Images",false) {
 				
@@ -128,6 +138,8 @@ public abstract class GWTThreeJsEquirectangularBase extends AbstractThreeApp imp
 							
 							
 							duration=durationBox.getValue();
+							
+							//TODO set frame-rate
 							
 							currentFrameIndex=0;//can try again?
 							extactor=getEquirectangularImageExtractor(size,getEquirectangularApp().getCubeCamera());
@@ -195,9 +207,12 @@ public abstract class GWTThreeJsEquirectangularBase extends AbstractThreeApp imp
 	}
 	
 
-	
+	/**
+	 * when duration is snapshot ,1 frame-size 
+	 * @return
+	 */
 	private int countMaxRecordFrameSize() {
-		return duration==0?1:(int) (frameRate*duration);
+		return duration==0?1:(int) (frameRate/perRecord*duration);
 	}
 
 
