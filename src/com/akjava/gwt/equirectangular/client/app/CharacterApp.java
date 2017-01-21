@@ -106,7 +106,7 @@ public class CharacterApp extends AbstractEquirectangularApp{
 		
 		
 		//cubeCamera=THREE.CubeCamera(NEAR, FAR, 512);
-		cubeCamera=THREE.CubeCamera(.1, 1000, 2048);
+		cubeCamera=THREE.CubeCamera(.001, 10000, 2048);
 		cubeCamera.setPosition(0, 500, 0 );
 		//scene.add(cubeCamera);//need?
 		//cubeCamera.getRotation().setX(Math.toRadians(-90));
@@ -150,6 +150,8 @@ public class CharacterApp extends AbstractEquirectangularApp{
 				mesh.getScale().setScalar(1000);
 				mesh.setPosition(0,-500*scale, -200*scale);
 				controls.getTarget().set(0,-500,-400);
+				mesh.getGeometry().computeBoundingBox();
+				mesh.getGeometry().computeBoundingSphere();
 				scene.add(mesh);
 				
 				

@@ -29,6 +29,7 @@ public interface EquirectangularApp {
 	 */
 	public  void startExtract(int maxFrame);
 	
+	public  void endExtract();
 	
 	/*
 	 * every frame action,millisecond

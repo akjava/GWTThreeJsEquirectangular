@@ -57,7 +57,7 @@ public abstract class GWTThreeJsEquirectangularBase extends AbstractThreeApp imp
 
 
 	private CheckBox noPost;
-	
+	private boolean startExtracted;
 	public void onModuleLoad() {
 		
 		//should interface
@@ -253,7 +253,9 @@ public abstract class GWTThreeJsEquirectangularBase extends AbstractThreeApp imp
 	}
 	
 	private void onRecordEnd() {
+		startExtracted=false;
 		executeButton.setEnabled(true);
+		getEquirectangularApp().endExtract();
 	}
 
 
@@ -292,10 +294,12 @@ public abstract class GWTThreeJsEquirectangularBase extends AbstractThreeApp imp
 			return;
 		}
 		
-		
+		if(isRecording()){
+			startExtracted=true;
+		}
 		getEquirectangularApp().animate(time);
 		
-		if(isRecording()){
+		if(isRecording() && startExtracted){//care end onStartExtracted
 			if(!noPost.getValue()){
 			if(current<perRecord){
 				current++;

@@ -21,7 +21,7 @@
  
  <init-param>
   <param-name>directory</param-name>
-  <param-value>s:\download\nonadatas</param-value>
+  <param-value>s:\download\nonadatas\images</param-value>
   </init-param>
   
 </servlet>
@@ -39,7 +39,7 @@
 
  <init-param>
   <param-name>directory</param-name>
-  <param-value>s:\download\nonadatas</param-value>
+  <param-value>s:\download\nonadatas\images</param-value>
   </init-param>
   
 </servlet>

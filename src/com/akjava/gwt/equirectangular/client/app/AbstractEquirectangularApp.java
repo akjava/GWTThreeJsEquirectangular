@@ -37,6 +37,11 @@ public abstract class AbstractEquirectangularApp implements EquirectangularApp{
 	protected void onStartExtract() {
 		
 	}
+	
+	@Override
+	public void endExtract(){
+		
+	}
 
 	private boolean started;
 	private int maxFrame;

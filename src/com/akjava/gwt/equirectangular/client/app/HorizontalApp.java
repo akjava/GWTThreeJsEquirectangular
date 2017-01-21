@@ -252,4 +252,10 @@ public void animate(double t){
 		}
 		
 	}
+
+@Override
+public void endExtract() {
+	// TODO Auto-generated method stub
+	
+}
 }
