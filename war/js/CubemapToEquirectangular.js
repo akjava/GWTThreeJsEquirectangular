@@ -146,10 +146,14 @@ CubemapToEquirectangular.prototype.convert = function( cubeCamera ) {
 	var pixels = new Uint8Array( 4 * this.width * this.height );
 	this.renderer.readRenderTargetPixels( this.output, 0, 0, this.width, this.height, pixels );
 
-	var imageData = new ImageData( new Uint8ClampedArray( pixels ), this.width, this.height );
+	var clampedArray=new Uint8ClampedArray( pixels );
+	var imageData = new ImageData(clampedArray , this.width, this.height );
 
 	this.ctx.putImageData( imageData, 0, 0 );
 
+	imageData=null;
+	pixels=null;//new Uint8Array( 1);//try clear
+	clampedArray=null;
 	/*
 	this.canvas.toBlob( function( blob ) {
 

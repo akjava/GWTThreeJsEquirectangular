@@ -1,5 +1,8 @@
 package com.akjava.gwt.equirectangular.client.app;
 
+import java.util.List;
+
+import com.akjava.gwt.lib.client.JavaScriptUtils;
 import com.akjava.gwt.three.client.examples.js.THREEExp;
 import com.akjava.gwt.three.client.examples.js.Water;
 import com.akjava.gwt.three.client.examples.js.controls.OrbitControls;
@@ -12,16 +15,20 @@ import com.akjava.gwt.three.client.js.animation.AnimationClip;
 import com.akjava.gwt.three.client.js.animation.AnimationMixer;
 import com.akjava.gwt.three.client.js.cameras.PerspectiveCamera;
 import com.akjava.gwt.three.client.js.core.Geometry;
+import com.akjava.gwt.three.client.js.core.Object3D;
 import com.akjava.gwt.three.client.js.extras.geometries.IcosahedronGeometry;
 import com.akjava.gwt.three.client.js.lights.DirectionalLight;
 import com.akjava.gwt.three.client.js.lights.HemisphereLight;
 import com.akjava.gwt.three.client.js.loaders.ImageLoader;
+import com.akjava.gwt.three.client.js.loaders.ObjectLoader;
 import com.akjava.gwt.three.client.js.loaders.ImageLoader.ImageLoadHandler;
 import com.akjava.gwt.three.client.js.loaders.JSONLoader.JSONLoadHandler;
+import com.akjava.gwt.three.client.js.loaders.ObjectLoader.ObjectLoadHandler;
 import com.akjava.gwt.three.client.js.loaders.XHRLoader.XHRLoadHandler;
 import com.akjava.gwt.three.client.js.materials.Material;
 import com.akjava.gwt.three.client.js.materials.MeshPhongMaterial;
 import com.akjava.gwt.three.client.js.materials.ShaderMaterial;
+import com.akjava.gwt.three.client.js.objects.Group;
 import com.akjava.gwt.three.client.js.objects.Mesh;
 import com.akjava.gwt.three.client.js.objects.SkinnedMesh;
 import com.akjava.gwt.three.client.js.renderers.shaders.WebGLShaders.ShaderChunk.ShaderLib;
@@ -103,11 +110,28 @@ public class CharacterApp extends AbstractEquirectangularApp{
 		camera = THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);//camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
 		camera.getPosition().set( 0, 0, 0 );
 
+	ObjectLoader loader = THREE.ObjectLoader();//var loader = new THREE.ObjectLoader();
+		
+		loader.load("sweethome/userguideexamplefixed.json",new ObjectLoadHandler() {
+			@Override
+			public void onLoad(Object3D object) {
+				List<Object3D> childrens=JavaScriptUtils.toList(object.getChildren());
+				Group group=THREE.Group();
+				for(Object3D obj:childrens){
+					object.remove(obj);
+					group.add(obj);
+				}
+				group.getScale().setScalar(10);
+				group.setPosition(2260,0,3400);
+				scene.add(group);
+			}
+		});
+		
 		
 		
 		//cubeCamera=THREE.CubeCamera(NEAR, FAR, 512);
-		cubeCamera=THREE.CubeCamera(.001, 10000, 2048);
-		cubeCamera.setPosition(0, 500, 0 );
+		cubeCamera=THREE.CubeCamera(1, 10000, 2048);
+		cubeCamera.setPosition(0, 1500, 0 );
 		//scene.add(cubeCamera);//need?
 		//cubeCamera.getRotation().setX(Math.toRadians(-90));
 		
@@ -145,7 +169,7 @@ public class CharacterApp extends AbstractEquirectangularApp{
 						.morphTargets(true)
 						));
 				
-				int scale=5;
+				int scale=1;
 				
 				mesh.getScale().setScalar(1000);
 				mesh.setPosition(0,-500*scale, -200*scale);
@@ -277,7 +301,7 @@ public class CharacterApp extends AbstractEquirectangularApp{
 						MeshPhongMaterial material = THREE.MeshPhongMaterial( GWTParamUtils.MeshPhongMaterial().vertexColors(THREE.FaceColors).shininess(100).envMap(cubeMap) );//var material = new THREE.MeshPhongMaterial( {vertexColors: THREE.FaceColors,shininess: 100,envMap: cubeMap} );
 
 						sphere = THREE.Mesh( geometry, material );//sphere = new THREE.Mesh( geometry, material );
-						scene.add( sphere );
+						//scene.add( sphere );
 					
 	}
 

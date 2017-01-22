@@ -1,6 +1,7 @@
 package com.akjava.gwt.equirectangular.client;
 
 import com.akjava.gwt.equirectangular.client.app.CharacterApp;
+import com.akjava.gwt.equirectangular.client.app.SweetHome3dApp;
 import com.akjava.gwt.three.client.js.cameras.CubeCamera;
 import com.google.gwt.core.client.EntryPoint;
 
@@ -31,6 +32,7 @@ public class JsVersion extends GWTThreeJsEquirectangularBase {
 			//app=new TurnSkyboxApp();
 			//app=new HorizontalApp();
 			app=new CharacterApp();
+			//app=new SweetHome3dApp();
 		}
 		return app;
 	}
