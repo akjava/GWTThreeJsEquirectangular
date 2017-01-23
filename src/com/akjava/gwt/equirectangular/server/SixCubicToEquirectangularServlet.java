@@ -178,14 +178,16 @@ CUBE_DOWN,
 		
 		//TODO get from request
 		final BufferedImage outputImage=converter.convertImage(images);
-		BufferedImage tmp1=new GaussianFilter(6).filter(outputImage,null);
+		
+	/*	BufferedImage tmp1=new GaussianFilter(6).filter(outputImage,null);
 		UnsharpFilter unsharp=new UnsharpFilter();
 		unsharp.setAmount(0.5f);
 		unsharp.setRadius(4);
 		BufferedImage tmp2=unsharp.filter(tmp1,null);
 		
-		final BufferedImage finalImage=tmp2;
+		final BufferedImage finalImage=tmp2;*/
 		
+		final BufferedImage finalImage=outputImage;//no effect
 		
 		lastSize=size;
 		

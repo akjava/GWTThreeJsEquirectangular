@@ -112,6 +112,7 @@ public class Base64FileSaveServlet extends HttpServlet {
 		Files.write(bytes, file);
 		
 		
+		
 		resp.getWriter().println("Base64FileSaveServlet:written "+bytes.length);
 		//TODO
 		//call nona,optional 

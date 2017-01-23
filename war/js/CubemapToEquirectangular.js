@@ -121,7 +121,6 @@ CubemapToEquirectangular.prototype.setSize = function( width, height ) {
 
 	this.canvas.width = this.width;
 	this.canvas.height = this.height;
-
 }
 
 CubemapToEquirectangular.prototype.getCubeCamera = function( size ) {
@@ -137,7 +136,7 @@ CubemapToEquirectangular.prototype.attachCubeCamera = function( camera ) {
 	this.attachedCamera = camera;
 
 }
-
+//some code is modified
 CubemapToEquirectangular.prototype.convert = function( cubeCamera ) {
 
 	this.quad.material.uniforms.map.value = cubeCamera.renderTarget.texture;
@@ -152,8 +151,11 @@ CubemapToEquirectangular.prototype.convert = function( cubeCamera ) {
 	this.ctx.putImageData( imageData, 0, 0 );
 
 	imageData=null;
-	pixels=null;//new Uint8Array( 1);//try clear
+	pixels=null;
 	clampedArray=null;
+	
+	/*pixels=null;//new Uint8Array( 1);//try clear
+	clampedArray=null;*/
 	/*
 	this.canvas.toBlob( function( blob ) {
 

@@ -284,6 +284,11 @@ public abstract class GWTThreeJsEquirectangularBase extends AbstractThreeApp imp
 	}
 
 	private int current=1;
+	
+	
+	int skipAnimate=100;
+	int currentAnimate;
+	
 	public void animate(double time){
 		if(posting){//still posting to servlet
 			if(current<perRecord){
@@ -296,6 +301,13 @@ public abstract class GWTThreeJsEquirectangularBase extends AbstractThreeApp imp
 		
 		if(isRecording()){
 			startExtracted=true;
+			
+			if(currentAnimate<skipAnimate){//skip for garbage,conflict perRecord
+				currentAnimate++;
+				return;
+			}else{
+				currentAnimate=0;
+			}
 		}
 		getEquirectangularApp().animate(time);
 		
